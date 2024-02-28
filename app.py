@@ -103,10 +103,12 @@ def main():
         # st.write(query)
 
         if st.button("Ask"):
-            st.write(huggingfacehub_api_token)
-            os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
-            if huggingfacehub_api_token=='':
-                st.write('Warning: Please pass your HUGGINGFACE API KEY on Step 1')
+            if huggingfacehub_api_token == '':
+                st.write('Warning: Please pass your OPEN AI API KEY on Step 1')
+           # st.write(huggingfacehub_api_token)
+            #os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
+            #if huggingfacehub_api_token=='':
+             #   st.write('Warning: Please pass your HUGGINGFACE API KEY on Step 1')
             else:
                 docs = VectorStore.similarity_search(query=query, k=3)
 
