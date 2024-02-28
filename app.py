@@ -37,16 +37,19 @@ def main():
     st.write("This app uses OpenAI's LLM model to answer questions about your PDF file. Upload your PDF file and ask questions about it. The app will return the answer from your PDF file.")
 
     st.header("1. Pass your HUGGINGFACE API KEY here")
-    v='demo'
+    huggingfacehub_api_token = st.text_input("**HUGGINGFACE API KEY**")
+    os.environ["HUGGINGFACE API KEY"] = huggingfacehub_api_token
+    #v='demo'
+ 
     huggingfacehub_api_token=st.text_input("**HUGGINGFACE API KEY**", value=v)
     st.write("You can get your OpenAI API key from [here](https://platform.openai.com/account/api-keys)")
 
 
-    if huggingfacehub_api_token==v:
-        huggingfacehub_api_token=st.secrets["HUGGINGFACE_API_KEY"]
+  #  if huggingfacehub_api_token==v:
+   #     huggingfacehub_api_token=st.secrets["HUGGINGFACE_API_KEY"]
     # if huggingfacehub_api_token=='':
     #     load_dotenv()
-    os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
+    #os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
 
     # upload a PDF file
 
