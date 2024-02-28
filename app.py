@@ -98,8 +98,8 @@ def main():
     #         VectorStore = pickle.load(f)
         # Accept user questions/query
         st.header("3. Ask questions about your PDF file:")
-        q="Tell me about the content of the PDF"
-        query = st.text_input("Questions",value=q)
+       # q="Tell me about the content of the PDF"
+        query = st.text_input("Questions") #value=q
         # st.write(query)
 
         if st.button("Ask"):
