@@ -38,7 +38,7 @@ def main():
 
     st.header("1. Pass your HUGGINGFACE API KEY here")
     huggingfacehub_api_token = st.text_input("**HUGGINGFACE API KEY**")
-    os.environ["HUGGINGFACE API KEY"] = huggingfacehub_api_token
+    os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
     #v='demo'
  
    # huggingfacehub_api_token=st.text_input("**HUGGINGFACE API KEY**", value=v)
