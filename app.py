@@ -4,12 +4,14 @@ import pickle
 from PyPDF2 import PdfReader
 #from streamlit_extras.add_vertical_space import add_vertical_space
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings.openai import OpenAIEmbeddings
+#from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
 import os
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.llms import HuggingFaceHub
 
 st.set_page_config(page_title='🤗💬 PDF Chat App - GPT')
 
@@ -25,7 +27,7 @@ with st.sidebar:
 
     ''')
   #  add_vertical_space(5)
-    st.write('Made with ❤️ by [Livia Ellen](https://liviaellen.com/portfolio)')
+    st.write('Made with ❤️ by [NOA COHEN]')
 
 
 
@@ -34,17 +36,17 @@ def main():
     st.header("Talk to your PDF 💬")
     st.write("This app uses OpenAI's LLM model to answer questions about your PDF file. Upload your PDF file and ask questions about it. The app will return the answer from your PDF file.")
 
-    st.header("1. Pass your OPEN AI API KEY here")
+    st.header("1. Pass your HUGGINGFACE API KEY here")
     v='demo'
-    openai_key=st.text_input("**OPEN AI API KEY**", value=v)
+    openai_key=st.text_input("**HUGGINGFACE API KEY**", value=v)
     st.write("You can get your OpenAI API key from [here](https://platform.openai.com/account/api-keys)")
 
 
     if openai_key==v:
-        openai_key=st.secrets["OPENAI_API_KEY"]
+        openai_key=st.secrets["HUGGINGFACE_API_KEY"]
     # if openai_key=='':
     #     load_dotenv()
-    os.environ["OPENAI_API_KEY"] = openai_key
+    os.environ["HUGGINGFACE_API_KEY"] = huggingfacehub_api_token
 
     # upload a PDF file
 
@@ -77,13 +79,15 @@ def main():
                 VectorStore = pickle.load(f)
             # st.write('Embeddings Loaded from the Disk')s
         else:
-            embeddings = OpenAIEmbeddings()
+            embeddings = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2",
+                model_kwargs={"device": "cpu"},
+                )
             VectorStore = FAISS.from_texts(chunks, embedding=embeddings)
             with open(f"{store_name}.pkl", "wb") as f:
                 pickle.dump(VectorStore, f)
 
-        # embeddings = OpenAIEmbeddings()
-        # VectorStore = FAISS.from_texts(chunks, embedding=embeddings)
+        
 
     # st.header("or.. Try it with this The Alchaemist PDF book")
     # if st.button('Ask The Alchemist Book Questions'):
@@ -98,12 +102,16 @@ def main():
         if st.button("Ask"):
             # st.write(openai_key)
             # os.environ["OPENAI_API_KEY"] = openai_key
-            if openai_key=='':
-                st.write('Warning: Please pass your OPEN AI API KEY on Step 1')
+            if huggingfacehub_api_token=='':
+                st.write('Warning: Please pass your HUGGINGFACE API KEY on Step 1')
             else:
                 docs = VectorStore.similarity_search(query=query, k=3)
 
-                llm = OpenAI()
+                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl",
+                    model_kwargs={"temperature":0.5, "max_length":512},)
+                  #  huggingfacehub_api_token='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')
+
+
                 chain = load_qa_chain(llm=llm, chain_type="stuff")
                 with get_openai_callback() as cb:
                     response = chain.run(input_documents=docs, question=query)
@@ -111,7 +119,7 @@ def main():
                 st.header("Answer:")
                 st.write(response)
                 st.write('--')
-                st.header("OpenAI API Usage:")
+                st.header("HUGGINGFACE API Usage:")
                 st.text(cb)
 
 if __name__ == '__main__':
