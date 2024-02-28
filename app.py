@@ -41,7 +41,7 @@ def main():
     os.environ["HUGGINGFACE API KEY"] = huggingfacehub_api_token
     #v='demo'
  
-    huggingfacehub_api_token=st.text_input("**HUGGINGFACE API KEY**", value=v)
+   # huggingfacehub_api_token=st.text_input("**HUGGINGFACE API KEY**", value=v)
     st.write("You can get your OpenAI API key from [here](https://platform.openai.com/account/api-keys)")
 
 
